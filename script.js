@@ -150,13 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
    * 6. REDIRECIONAMENTO DINÂMICO DE WHATSAPP (OPCIONAL)
    * ========================================== */
   // Substituir os números de whatsapp fictícios '5500000000000' se houver um número configurado
-  const whatsappNumber = '5511999999999'; // Insira o WhatsApp padrão da Página que vende aqui
+  const whatsappNumber = '5571989230751'; // Insira o WhatsApp padrão da Página que vende aqui
   const whatsappLinks = document.querySelectorAll('a[href^="https://wa.me/"]');
 
   whatsappLinks.forEach(link => {
     const originalUrl = link.getAttribute('href');
-    if (originalUrl.includes('5500000000000')) {
-      const updatedUrl = originalUrl.replace('5500000000000', whatsappNumber);
+    if (originalUrl.includes('5571989230751')) {
+      const updatedUrl = originalUrl.replace('5571989230751', whatsappNumber);
       link.setAttribute('href', updatedUrl);
     }
   });

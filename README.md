@@ -25,9 +25,9 @@ Por ter sido desenvolvida em **HTML5, CSS3 e JavaScript Puros (Vanilla)**, a pá
 ### 1. Alterar o Número do WhatsApp
 Para atualizar o link do WhatsApp com o seu número de atendimento real:
 1. Abra o arquivo [script.js](script.js).
-2. Na linha **109**, mude o valor da variável `whatsappNumber` para o seu número com o código do país e DDD (apenas números, ex: `5511999999999` para São Paulo):
+2. Na linha **153**, mude o valor da variável `whatsappNumber` para o seu número com o código do país e DDD (apenas números, ex: `5571989230751` para Salvador):
    ```javascript
-   const whatsappNumber = '5511999999999'; // Seu número aqui
+   const whatsappNumber = '5571989230751'; // Seu número aqui
    ```
 3. O script atualizará automaticamente todos os botões de CTA da página com o seu link correto e uma mensagem personalizada.
 
