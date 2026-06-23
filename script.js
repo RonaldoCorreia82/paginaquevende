@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   faqItems.forEach(item => {
     const question = item.querySelector('.faq-question');
-    const answer = item.querySelector('.faq-answer');
 
     question.addEventListener('click', () => {
       const isActive = item.classList.contains('active');
@@ -130,18 +129,14 @@ document.addEventListener('DOMContentLoaded', () => {
       faqItems.forEach(otherItem => {
         if (otherItem !== item) {
           otherItem.classList.remove('active');
-          otherItem.querySelector('.faq-answer').style.maxHeight = null;
         }
       });
 
       // Alternar o FAQ clicado
       if (isActive) {
         item.classList.remove('active');
-        answer.style.maxHeight = null;
       } else {
         item.classList.add('active');
-        // Define a altura máxima dinamicamente baseada no tamanho do conteúdo
-        answer.style.maxHeight = answer.scrollHeight + 'px';
       }
     });
   });

@@ -1467,6 +1467,10 @@ img {
   transition: max-height var(--transition-normal);
 }
 
+.faq-item.active .faq-answer {
+  max-height: 350px;
+}
+
 .faq-answer p {
   padding: 0 30px 24px 30px;
   font-size: 14px;
