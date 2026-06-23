@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0088ff" />
+      <stop offset="100%" stop-color="#0044cc" />
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00aaff" />
+      <stop offset="50%" stop-color="#0055ff" />
+      <stop offset="100%" stop-color="#002288" />
+    </linearGradient>
+    <linearGradient id="darkBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a2a2a" />
+      <stop offset="100%" stop-color="#121212" />
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="5" stdDeviation="4" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Blue Ring (3D effect) -->
+  <circle cx="250" cy="250" r="235" fill="none" stroke="url(#borderGrad)" stroke-width="12" filter="url(#dropShadow)" />
+  <circle cx="250" cy="250" r="226" fill="none" stroke="#001133" stroke-width="3" />
+
+  <!-- Main Dark Background Circle -->
+  <circle cx="250" cy="250" r="224" fill="url(#darkBg)" />
+
+  <!-- Inner Blue Ring -->
+  <circle cx="250" cy="250" r="220" fill="none" stroke="url(#borderGrad)" stroke-width="3" opacity="0.8" />
+
+  <!-- Browser Mockup Representation -->
+  <g transform="translate(155, 60)" filter="url(#dropShadow)">
+    <!-- Browser window container -->
+    <rect x="0" y="0" width="180" height="150" rx="15" fill="#ffffff" />
+    <!-- Browser Header -->
+    <path d="M 0 15 A 15 15 0 0 1 15 0 L 165 0 A 15 15 0 0 1 180 15 L 180 40 L 0 40 Z" fill="url(#blueGrad)" />
+    <!-- Three dots (browser controls) -->
+    <circle cx="25" cy="20" r="5" fill="#ffffff" opacity="0.9" />
+    <circle cx="45" cy="20" r="5" fill="#ffffff" opacity="0.9" />
+    <circle cx="65" cy="20" r="5" fill="#ffffff" opacity="0.9" />
+    
+    <!-- Browser Content (Layout) -->
+    <!-- Large square on the left -->
+    <rect x="18" y="55" width="60" height="60" rx="6" fill="url(#blueGrad)" />
+    <!-- Text Lines on the right -->
+    <rect x="90" y="58" width="72" height="10" rx="3" fill="#dddddd" />
+    <rect x="90" y="76" width="72" height="7" rx="3.5" fill="#e8e8e8" />
+    <rect x="90" y="91" width="72" height="7" rx="3.5" fill="#e8e8e8" />
+    <rect x="90" y="106" width="55" height="7" rx="3.5" fill="#e8e8e8" />
+    <!-- Bottom line -->
+    <rect x="18" y="128" width="144" height="8" rx="4" fill="#f0f0f0" />
+  </g>
+
+  <!-- Arrow pointing up-right (3D overlay effect) -->
+  <path d="M 130 220 C 180 200, 240 180, 310 110 L 285 90 L 370 85 L 360 170 L 335 140 C 275 200, 210 225, 130 220 Z" 
+        fill="url(#blueGrad)" filter="url(#dropShadow)" />
+
+  <!-- Typography Group (Centered and styled like the logo) -->
+  <g transform="translate(250, 275)" text-anchor="middle" font-family="'Montserrat', 'Outfit', 'Helvetica', 'Arial', sans-serif">
+    <!-- PÁGINA -->
+    <text x="0" y="10" font-size="64" font-weight="900" fill="#ffffff" letter-spacing="2">PÁGINA</text>
+    
+    <!-- QUE VENDE -->
+    <text x="0" y="68" font-size="44" font-weight="900" fill="#ffffff" letter-spacing="1">
+      QUE <tspan fill="#0077ff">VENDE</tspan>
+    </text>
+    
+    <!-- Thin Blue Horizontal Line -->
+    <line x1="-120" y1="88" x2="120" y2="88" stroke="#0077ff" stroke-width="4" />
+    
+    <!-- LANDING PAGES -->
+    <text x="0" y="112" font-size="19" font-weight="800" fill="#ffffff" letter-spacing="5">LANDING PAGES</text>
+    
+    <!-- FEITAS PARA VENDER -->
+    <text x="0" y="132" font-size="17" font-weight="700" fill="#ffffff" letter-spacing="1.5">
+      FEITAS PARA <tspan fill="#0077ff" font-weight="800">VENDER</tspan>
+    </text>
+  </g>
+</svg>
