@@ -124,15 +124,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     question.addEventListener('click', () => {
       const isActive = item.classList.contains('active');
-      
-      // Fechar todos os outros FAQs abertos
       faqItems.forEach(otherItem => {
-        if (otherItem !== item) {
-          otherItem.classList.remove('active');
-        }
+        if (otherItem !== item) otherItem.classList.remove('active');
       });
+      if (isActive) {
+        item.classList.remove('active');
+      } else {
+        item.classList.add('active');
+      }
+    });
+  });
 
-      // Alternar o FAQ clicado
+  const faq2Items = document.querySelectorAll('.faq2-item');
+
+  faq2Items.forEach(item => {
+    const question = item.querySelector('.faq2-question');
+
+    question.addEventListener('click', () => {
+      const isActive = item.classList.contains('active');
+      faq2Items.forEach(otherItem => {
+        if (otherItem !== item) otherItem.classList.remove('active');
+      });
       if (isActive) {
         item.classList.remove('active');
       } else {
