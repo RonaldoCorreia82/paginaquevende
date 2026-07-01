@@ -19,3 +19,6 @@ yarn-debug.log*
 yarn-error.log*
 .agents/
 .gemini/
+
+# Arquivos de trava do LibreOffice/Office
+.~lock.*#

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hero Animado — AI Landing Build</title>
+<style>
+  /* ===== reset mínimo só para a página de preview ===== */
+  html,body{margin:0;padding:0;background:#04050d;}
+
+  /* =================================================================
+     SEÇÃO DA ANIMAÇÃO  —  COLE A PARTIR DAQUI no topo da sua página
+     Tudo é "scoped" sob #pqv-hero, então não conflita com o resto do site.
+     ================================================================= */
+  #pqv-hero{
+    position:relative;
+    width:100%;
+    height:100vh;
+    min-height:620px;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 90% at 50% 0%, #0a0f29 0%, #06081a 45%, #04050d 100%);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    isolation:isolate;
+    color:#fff;
+  }
+  #pqv-hero *{box-sizing:border-box;}
+
+  /* ---- brilhos de fundo (azul / roxo / cyan) ---- */
+  #pqv-hero .pqv-glow{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;pointer-events:none;z-index:1;}
+  #pqv-hero .pqv-glow.g1{width:46vw;height:46vw;top:-12%;right:-6%;
+    background:radial-gradient(circle,rgba(139,92,246,.85),rgba(139,92,246,0) 65%);
+    animation:pqv-drift1 16s ease-in-out infinite;}
+  #pqv-hero .pqv-glow.g2{width:52vw;height:52vw;bottom:-22%;left:50%;transform:translateX(-50%);
+    background:radial-gradient(circle,rgba(34,211,238,.55),rgba(34,211,238,0) 65%);
+    animation:pqv-drift2 18s ease-in-out infinite;}
+  #pqv-hero .pqv-glow.g3{width:40vw;height:40vw;top:30%;left:-10%;
+    background:radial-gradient(circle,rgba(59,130,246,.6),rgba(59,130,246,0) 65%);
+    animation:pqv-drift3 20s ease-in-out infinite;}
+  @keyframes pqv-drift1{50%{transform:translate(-3%,4%) scale(1.08);}}
+  @keyframes pqv-drift2{50%{transform:translateX(-50%) translateY(-4%) scale(1.1);}}
+  @keyframes pqv-drift3{50%{transform:translate(4%,-3%) scale(1.06);}}
+
+  /* ---- piso em grid 3D com perspectiva ---- */
+  #pqv-hero .pqv-grid-wrap{position:absolute;inset:0;z-index:2;perspective:520px;overflow:hidden;pointer-events:none;}
+  #pqv-hero .pqv-grid{
+    position:absolute;left:-50%;right:-50%;bottom:-30%;height:120%;
+    transform:rotateX(74deg);transform-origin:center bottom;
+    background-image:
+      linear-gradient(rgba(99,140,255,.22) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(99,140,255,.22) 1px,transparent 1px);
+    background-size:46px 46px;
+    -webkit-mask-image:radial-gradient(120% 75% at 50% 100%,#000 30%,transparent 78%);
+            mask-image:radial-gradient(120% 75% at 50% 100%,#000 30%,transparent 78%);
+    animation:pqv-grid-move 8s linear infinite;
+  }
+  @keyframes pqv-grid-move{to{background-position-y:46px;}}
+
+  /* ---- partículas (canvas) ---- */
+  #pqv-hero canvas.pqv-particles{position:absolute;inset:0;z-index:3;pointer-events:none;}
+
+  /* ---- "câmera" (push-in suave e contínuo) ---- */
+  #pqv-hero .pqv-stage{
+    position:absolute;inset:0;z-index:4;
+    display:flex;align-items:flex-start;justify-content:center;
+    padding-top:clamp(30px,6vh,72px);
+    animation:pqv-push 14s ease-in-out infinite;
+    transform-origin:center 42%;
+  }
+  @keyframes pqv-push{
+    0%{transform:scale(.9) translateY(14px);}
+    45%{transform:scale(1) translateY(0);}
+    80%{transform:scale(1.02) translateY(-4px);}
+    100%{transform:scale(.9) translateY(14px);}
+  }
+
+  /* ---- bloco do "dashboard" ---- */
+  #pqv-hero .pqv-board{position:relative;width:min(720px,82vw);}
+  #pqv-hero .pqv-panel{
+    position:relative;border-radius:22px;padding:22px;
+    background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.10);
+    box-shadow:0 30px 80px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+
+  /* topo do painel */
+  #pqv-hero .pqv-topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+  #pqv-hero .pqv-dot{width:14px;height:14px;border-radius:5px;
+    background:linear-gradient(135deg,#8b5cf6,#22d3ee);flex:0 0 auto;}
+  #pqv-hero .pqv-navline{height:9px;border-radius:6px;background:rgba(255,255,255,.16);}
+  #pqv-hero .pqv-pill{margin-left:auto;width:120px;height:30px;border-radius:9px;
+    background:linear-gradient(135deg,#a78bfa,#6366f1);box-shadow:0 6px 20px rgba(124,92,246,.45);}
+
+  /* corpo: duas colunas */
+  #pqv-hero .pqv-body{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  #pqv-hero .pqv-bar{height:18px;border-radius:8px;margin-bottom:13px;}
+  #pqv-hero .pqv-bar.b1{width:88%;background:linear-gradient(90deg,#ffffff,#c7b3ff);}
+  #pqv-hero .pqv-bar.b2{width:70%;background:linear-gradient(90deg,#cde6ff,#7aa8ff);}
+  #pqv-hero .pqv-bar.b3{width:55%;background:linear-gradient(90deg,#b5f4ff,#5ad1ff);}
+  #pqv-hero .pqv-line{height:7px;width:80%;border-radius:6px;background:rgba(255,255,255,.10);margin-bottom:10px;}
+  #pqv-hero .pqv-line.s{width:64%;}
+  #pqv-hero .pqv-btns{display:flex;gap:12px;margin-top:20px;}
+  #pqv-hero .pqv-btn{height:34px;border-radius:10px;}
+  #pqv-hero .pqv-btn.solid{width:130px;background:linear-gradient(135deg,#7c5cf6,#4f46e5);box-shadow:0 8px 22px rgba(99,76,246,.5);}
+  #pqv-hero .pqv-btn.ghost{width:104px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.03);}
+
+  /* painel de gráfico (aninhado) */
+  #pqv-hero .pqv-chart{position:relative;border-radius:16px;padding:16px;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+    border:1px solid rgba(255,255,255,.09);}
+  #pqv-hero .pqv-chart-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+  #pqv-hero .pqv-cdot{width:10px;height:10px;border-radius:50%;background:#22d3ee;box-shadow:0 0 12px #22d3ee;}
+  #pqv-hero .pqv-ring{margin-left:auto;width:26px;height:26px;border-radius:50%;
+    border:3px solid rgba(34,211,238,.25);border-top-color:#22d3ee;animation:pqv-spin 4s linear infinite;}
+  @keyframes pqv-spin{to{transform:rotate(360deg);}}
+  #pqv-hero .pqv-svg{display:block;width:100%;height:96px;}
+  #pqv-hero .pqv-path{fill:none;stroke:url(#pqvStroke);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+    filter:drop-shadow(0 0 6px rgba(34,211,238,.7));}
+  #pqv-hero .pqv-squares{display:flex;gap:8px;margin-top:12px;}
+  #pqv-hero .pqv-sq{flex:1;height:24px;border-radius:7px;background:rgba(255,255,255,.07);}
+  #pqv-hero .pqv-sq.hot{background:linear-gradient(135deg,#22d3ee,#3b82f6);box-shadow:0 0 16px rgba(34,211,238,.6);}
+
+  /* cartões inferiores */
+  #pqv-hero .pqv-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px;}
+  #pqv-hero .pqv-card{border-radius:16px;padding:18px;
+    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+    border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 40px rgba(0,0,0,.35);}
+  #pqv-hero .pqv-ico{width:34px;height:34px;border-radius:10px;margin-bottom:14px;}
+  #pqv-hero .pqv-card:nth-child(1) .pqv-ico{background:linear-gradient(135deg,#3b82f6,#22d3ee);box-shadow:0 0 18px rgba(59,130,246,.5);}
+  #pqv-hero .pqv-card:nth-child(2) .pqv-ico{background:linear-gradient(135deg,#8b5cf6,#6366f1);box-shadow:0 0 18px rgba(139,92,246,.5);}
+  #pqv-hero .pqv-card:nth-child(3) .pqv-ico{background:linear-gradient(135deg,#14b8a6,#22d3ee);box-shadow:0 0 18px rgba(20,184,166,.5);}
+  #pqv-hero .pqv-card .pqv-line{width:90%;}
+  #pqv-hero .pqv-card .pqv-line.s{width:65%;}
+
+  /* ---- estados de "montar" (animação por JS) ---- */
+  #pqv-hero .pqv-rise{opacity:0;transform:translateY(22px) scale(.985);
+    transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);}
+  #pqv-hero .pqv-rise.show{opacity:1;transform:none;}
+
+  /* desenho do gráfico */
+  #pqv-hero .pqv-path{stroke-dasharray:600;stroke-dashoffset:600;transition:stroke-dashoffset 1.6s ease-out;}
+  #pqv-hero .pqv-board.show .pqv-path{stroke-dashoffset:0;}
+
+  /* flash/bloom suave perto do fim do ciclo */
+  #pqv-hero .pqv-bloom{position:absolute;inset:0;z-index:5;pointer-events:none;background:#eaf2ff;opacity:0;
+    animation:pqv-bloom 14s ease-in-out infinite;mix-blend-mode:screen;}
+  @keyframes pqv-bloom{0%,72%{opacity:0;}80%{opacity:.16;}100%{opacity:0;}}
+
+  /* vinheta sutil nas bordas */
+  #pqv-hero .pqv-vignette{position:absolute;inset:0;z-index:6;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%);}
+
+  /* ---- OVERLAY OPCIONAL (texto + CTA). Apague este bloco .pqv-overlay
+         se quiser SOMENTE a animação. ---- */
+  #pqv-hero .pqv-overlay{position:absolute;z-index:7;left:0;right:0;bottom:5%;
+    text-align:center;padding:0 24px;pointer-events:none;}
+  #pqv-hero .pqv-overlay h1{margin:0 0 14px;font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-.02em;
+    background:linear-gradient(90deg,#fff,#bcd2ff 60%,#9be7ff);-webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 2px 30px rgba(80,120,255,.25);}
+  #pqv-hero .pqv-overlay p{margin:0 auto 22px;max-width:560px;color:rgba(220,230,255,.8);font-size:clamp(14px,1.6vw,18px);}
+  #pqv-hero .pqv-overlay a{pointer-events:auto;display:inline-block;text-decoration:none;font-weight:700;font-size:16px;
+    color:#fff;padding:14px 30px;border-radius:12px;background:linear-gradient(135deg,#7c5cf6,#4f46e5);
+    box-shadow:0 10px 30px rgba(99,76,246,.5);transition:transform .2s,box-shadow .2s;}
+  #pqv-hero .pqv-overlay a:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(99,76,246,.65);}
+
+  @media(max-width:640px){
+    #pqv-hero .pqv-body{grid-template-columns:1fr;}
+    #pqv-hero .pqv-cards{grid-template-columns:1fr;}
+    #pqv-hero .pqv-card:nth-child(3){display:none;}
+  }
+
+  /* acessibilidade: respeita "reduzir movimento" */
+  @media(prefers-reduced-motion:reduce){
+    #pqv-hero .pqv-stage,#pqv-hero .pqv-glow,#pqv-hero .pqv-grid,
+    #pqv-hero .pqv-ring,#pqv-hero .pqv-bloom{animation:none!important;}
+    #pqv-hero .pqv-rise{opacity:1!important;transform:none!important;transition:none!important;}
+    #pqv-hero .pqv-path{stroke-dashoffset:0!important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ====================== INÍCIO DA SEÇÃO ====================== -->
+<section id="pqv-hero" aria-label="Animação de destaque">
+  <div class="pqv-glow g1"></div>
+  <div class="pqv-glow g2"></div>
+  <div class="pqv-glow g3"></div>
+
+  <div class="pqv-grid-wrap"><div class="pqv-grid"></div></div>
+
+  <canvas class="pqv-particles"></canvas>
+
+  <div class="pqv-stage">
+    <div class="pqv-board">
+      <!-- painel principal -->
+      <div class="pqv-panel pqv-rise" data-step="0">
+        <div class="pqv-topbar">
+          <span class="pqv-dot pqv-rise" data-step="1"></span>
+          <span class="pqv-navline pqv-rise" data-step="2" style="width:80px"></span>
+          <span class="pqv-navline pqv-rise" data-step="3" style="width:46px"></span>
+          <span class="pqv-navline pqv-rise" data-step="3" style="width:46px"></span>
+          <span class="pqv-pill pqv-rise" data-step="4"></span>
+        </div>
+        <div class="pqv-body">
+          <div class="pqv-col-left">
+            <div class="pqv-bar b1 pqv-rise" data-step="2"></div>
+            <div class="pqv-bar b2 pqv-rise" data-step="3"></div>
+            <div class="pqv-bar b3 pqv-rise" data-step="4"></div>
+            <div class="pqv-line pqv-rise" data-step="5"></div>
+            <div class="pqv-line s pqv-rise" data-step="5"></div>
+            <div class="pqv-btns">
+              <div class="pqv-btn solid pqv-rise" data-step="6"></div>
+              <div class="pqv-btn ghost pqv-rise" data-step="6"></div>
+            </div>
+          </div>
+          <div class="pqv-chart pqv-rise" data-step="4">
+            <div class="pqv-chart-head">
+              <span class="pqv-cdot"></span>
+              <span class="pqv-navline" style="width:70px"></span>
+              <span class="pqv-ring"></span>
+            </div>
+            <svg class="pqv-svg" viewBox="0 0 260 96" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="pqvStroke" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#3b82f6"/>
+                  <stop offset="1" stop-color="#22d3ee"/>
+                </linearGradient>
+              </defs>
+              <path class="pqv-path" d="M6 78 L52 64 L92 70 L132 44 L172 50 L212 24 L254 12"/>
+            </svg>
+            <div class="pqv-squares">
+              <span class="pqv-sq pqv-rise" data-step="6"></span>
+              <span class="pqv-sq pqv-rise" data-step="6"></span>
+              <span class="pqv-sq pqv-rise" data-step="7"></span>
+              <span class="pqv-sq pqv-rise" data-step="7"></span>
+              <span class="pqv-sq hot pqv-rise" data-step="8"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- cartões -->
+      <div class="pqv-cards">
+        <div class="pqv-card pqv-rise" data-step="7">
+          <div class="pqv-ico"></div>
+          <div class="pqv-line"></div><div class="pqv-line s"></div>
+        </div>
+        <div class="pqv-card pqv-rise" data-step="8">
+          <div class="pqv-ico"></div>
+          <div class="pqv-line"></div><div class="pqv-line s"></div>
+        </div>
+        <div class="pqv-card pqv-rise" data-step="9">
+          <div class="pqv-ico"></div>
+          <div class="pqv-line"></div><div class="pqv-line s"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pqv-bloom"></div>
+  <div class="pqv-vignette"></div>
+
+  <!-- OVERLAY OPCIONAL — apague esta div se quiser só a animação -->
+  <div class="pqv-overlay">
+    <h1>Sites que vendem por você</h1>
+    <p>Páginas de alta conversão, desenhadas para transformar visitantes em clientes.</p>
+    <a href="#contato">Quero meu site</a>
+  </div>
+</section>
+<!-- ======================= FIM DA SEÇÃO ======================= -->
+
+<script>
+(function(){
+  var root=document.getElementById('pqv-hero');
+  if(!root) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  /* ---------- partículas ---------- */
+  var canvas=root.querySelector('canvas.pqv-particles');
+  var ctx=canvas.getContext('2d');
+  var parts=[],raf=null,W=0,H=0,DPR=Math.min(window.devicePixelRatio||1,2);
+  var COLORS=['rgba(140,180,255,','rgba(34,211,238,','rgba(167,139,250,','rgba(255,255,255,'];
+  function resize(){
+    W=root.clientWidth;H=root.clientHeight;
+    canvas.width=W*DPR;canvas.height=H*DPR;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    var n=Math.round(Math.min(110,Math.max(50,W/14)));
+    parts=[];
+    for(var i=0;i<n;i++){
+      parts.push({
+        x:Math.random()*W,y:Math.random()*H,
+        r:Math.random()*1.8+.4,
+        vy:-(Math.random()*.35+.08),
+        vx:(Math.random()-.5)*.18,
+        a:Math.random()*.5+.15,
+        tw:Math.random()*Math.PI*2,
+        c:COLORS[(Math.random()*COLORS.length)|0]
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i];
+      p.x+=p.vx;p.y+=p.vy;p.tw+=0.03;
+      if(p.y<-6){p.y=H+6;p.x=Math.random()*W;}
+      if(p.x<-6)p.x=W+6;if(p.x>W+6)p.x=-6;
+      var alpha=p.a*(0.6+0.4*Math.sin(p.tw));
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,6.2832);
+      ctx.fillStyle=p.c+alpha+')';
+      ctx.fill();
+    }
+    raf=requestAnimationFrame(draw);
+  }
+
+  /* ---------- sequência de "montagem" ---------- */
+  var board=root.querySelector('.pqv-board');
+  var items=[].slice.call(root.querySelectorAll('.pqv-rise'));
+  var STAGGER=150, HOLD=6500, FADE=1100, GAP=500;
+  var timers=[];
+  function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+  function buildIn(){
+    var maxStep=0;
+    items.forEach(function(el){
+      var s=parseInt(el.getAttribute('data-step')||'0',10);
+      maxStep=Math.max(maxStep,s);
+      timers.push(setTimeout(function(){el.classList.add('show');},s*STAGGER));
+    });
+    board.classList.add('show'); // dispara o desenho do gráfico
+    var buildDone=maxStep*STAGGER+900;
+    timers.push(setTimeout(fadeOut, buildDone+HOLD));
+  }
+  function fadeOut(){
+    items.forEach(function(el){el.classList.remove('show');});
+    board.classList.remove('show');
+    timers.push(setTimeout(function(){clearTimers();buildIn();}, FADE+GAP));
+  }
+
+  function start(){
+    resize();
+    if(reduce){
+      items.forEach(function(el){el.classList.add('show');});
+      board.classList.add('show');
+      return;
+    }
+    if(raf)cancelAnimationFrame(raf);
+    draw();
+    clearTimers();buildIn();
+  }
+
+  /* só roda quando estiver visível, e pausa fora da tela */
+  var started=false;
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){ if(!started){started=true;start();} else if(!raf&&!reduce){draw();} }
+        else { if(raf){cancelAnimationFrame(raf);raf=null;} }
+      });
+    },{threshold:.05});
+    io.observe(root);
+  } else { start(); }
+
+  var rt;
+  window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(resize,200);});
+})();
+</script>
+</body>
+</html>
